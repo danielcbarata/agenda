@@ -31,32 +31,32 @@ app.get("/", (req, res) => {
     res.send("Ok – Servidor disponível.");
 });
 
-app.get("/agenda", (req, res) => {
+app.get("/usuarios", (req, res) => {
     try {
-        client.query("SELECT * FROM Agenda", function
+        client.query("SELECT * FROM Usuarios", function
             (err, result) {
             if (err) {
                 return console.error("Erro ao executar a qry de SELECT", err);
             }
             res.send(result.rows);
-            console.log("Chamou get agenda");
+            console.log("Chamou get usuario");
         });
     } catch (error) {
         console.log(error);
     }
 });
 
-app.get("/agenda/:id", (req, res) => {
+app.get("/usuarios/:id_usuario", (req, res) => {
     try {
-        console.log("Chamou /:id " + req.params.id);
+        console.log("Chamou /:id_usuario " + req.params.id_usuario);
         client.query(
-            "SELECT * FROM Agenda WHERE id = $1", [req.params.id],
+            "SELECT * FROM Usuarios WHERE id = $1", [req.params.id_usuario],
             function (err, result) {
                 if (err) {
                     return console.error("Erro ao executar a qry de SELECT id", err);
                 }
                 if (result.rowCount == 0) {
-                    res.send("Nada encontrado no ID " + [req.params.id]);
+                    res.send("Nada encontrado no ID " + [req.params.id_usuario]);
                 }
                 else {
                     res.send(result.rows);
@@ -69,13 +69,13 @@ app.get("/agenda/:id", (req, res) => {
     }
 });
 
-app.delete("/agenda/:id", (req, res) => {
+app.delete("/usuarios/:id_usuario", (req, res) => {
     try {
-        console.log("Chamou delete /:id " + req.params.id);
-        const id = req.params.id;
+        console.log("Chamou delete /:id_usuario " + req.params.id_usuario);
+        const id_usuario = req.params.id_usuario;
         client.query(
-            "DELETE FROM Agenda WHERE id = $1",
-            [id],
+            "DELETE FROM Agenda WHERE id_usuario = $1",
+            [id_usuario],
             function (err, result) {
                 if (err) {
                     return console.error("Erro ao executar a qry de DELETE", err);
@@ -94,19 +94,19 @@ app.delete("/agenda/:id", (req, res) => {
     }
 });
 
-app.post("/agenda", (req, res) => {
+app.post("/usuarios", (req, res) => {
     try {
         console.log("Chamou post", req.body);
-        const { nome, telefone } = req.body;
+        const { nome, telefone, horarios } = req.body;
         client.query(
-            "INSERT INTO Agenda (nome, telefone) VALUES ($1, $2) RETURNING * ",
-            [nome, telefone],
+            "INSERT INTO Usuarios (nome, telefone, horarios) VALUES ($1, $2, $3) RETURNING * ",
+            [nome, telefone, horarios],
             function (err, result) {
                 if (err) {
                     return console.error("Erro ao executar a qry de INSERT", err);
                 }
-                const { id } = result.rows[0];
-                res.setHeader("id", `${id}`);
+                const { id_usuario } = result.rows[0];
+                res.setHeader("id_usuario", `${id_usuario}`);
                 res.status(201).json(result.rows[0]);
                 console.log(result);
             }
@@ -116,19 +116,19 @@ app.post("/agenda", (req, res) => {
     }
 });
 
-app.put("/agenda/:id", (req, res) => {
+app.put("/usuarios/:id_usuario", (req, res) => {
     try {
         console.log("Chamou update", req.body);
-        const id = req.params.id;
-        const { nome, email, altura, peso } = req.body;
+        const id_usuario = req.params.id_usuario;
+        const { nome, telefone, horarios } = req.body;
         client.query(
-            "UPDATE Agenda SET nome=$1, telefone=$2 WHERE id=$3", [nome, telefone, id],
+            "UPDATE Agenda SET nome=$1, telefone=$2, horarios=$3 WHERE id_usuario=$4", [nome, telefone, , horarios, id_usuario],
             function (err, result) {
                 if (err) {
                     return console.error("Erro ao executar a qry de UPDATE", err);
                 } else {
-                    res.setHeader("id", id);
-                    res.status(202).json({ id: id });
+                    res.setHeader("id_usuario", id_usuario);
+                    res.status(202).json({ id_usuario: id_usuario });
                     console.log(result);
                 }
             }
