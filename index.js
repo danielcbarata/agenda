@@ -50,7 +50,7 @@ app.get("/usuarios/:id_usuario", (req, res) => {
     try {
         console.log("Chamou /:id_usuario " + req.params.id_usuario);
         client.query(
-            "SELECT * FROM Usuarios WHERE id = $1", [req.params.id_usuario],
+            "SELECT * FROM Usuarios WHERE id_usuario = $1", [req.params.id_usuario],
             function (err, result) {
                 if (err) {
                     return console.error("Erro ao executar a qry de SELECT id", err);
