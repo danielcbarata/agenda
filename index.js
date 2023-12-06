@@ -103,7 +103,9 @@ app.post("/usuarios", (req, res) => {
             [nome, telefone, horarios],
             function (err, result) {
                 if (err) {
-                    return console.error("Erro ao executar a qry de INSERT", err);
+                    console.error("Erro ao executar a qry de INSERT", err);
+                    res.status(400).json({ error: "Dados inválidos" });
+                    return;
                 }
                 const { id_usuario } = result.rows[0];
                 res.setHeader("id_usuario", `${id_usuario}`);
